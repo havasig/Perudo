@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:perudo/createRoom.dart';
+import 'package:perudo/waiting_room.dart';
 
 void main() {
   runApp(Menu());
@@ -32,23 +32,21 @@ class MainMenu extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Welcome'),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CreateRoom(isAdmin: false)));
+                        builder: (context) => WaitingRoom(false)));
               },
-              child: const Text('Join room', style: TextStyle(fontSize: 20)),
+              child: const Text('Join room'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreateRoom(isAdmin: true)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => WaitingRoom(true)));
               },
-              child: const Text('Create room', style: TextStyle(fontSize: 20)),
+              child: const Text('Create room'),
             ),
           ],
         ),

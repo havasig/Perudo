@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'globals.dart' as globals;
 
 class MyTurn extends StatefulWidget {
   @override
@@ -8,9 +7,15 @@ class MyTurn extends StatefulWidget {
 }
 
 class _MyTurnState extends State<MyTurn> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+  /* 
   Map<String, int> myBet = {
-    "count": globals.currentBet["count"],
-    "value": globals.currentBet["value"] 
+    "count": globals.currentBet["count"]!,
+    "value": globals.currentBet["value"]!
   };
 
   @override
@@ -25,18 +30,18 @@ class _MyTurnState extends State<MyTurn> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(globals.myData.username),
+            Text(globals.myData!.username!),
             Text('Your dice: '),
             Expanded(
               child: ListView.builder(
                   padding: const EdgeInsets.all(8),
-                  itemCount: globals.myData.diceValues.length,
+                  itemCount: globals.myData!.diceValues!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text('${globals.myData.diceValues[index]} '),
+                          Text('${globals.myData!.diceValues![index]} '),
                         ],
                       ),
                     );
@@ -48,7 +53,8 @@ class _MyTurnState extends State<MyTurn> {
                 tooltip: 'Decrease my bet count by 1',
                 onPressed: () {
                   setState(() {
-                    if (myBet["count"] > 1) myBet["count"] -= 1;
+                    if (myBet["count"]! > 1)
+                      myBet["count"] = myBet["count"]! - 1;
                   });
                 },
               ),
@@ -58,7 +64,7 @@ class _MyTurnState extends State<MyTurn> {
                 tooltip: 'Increase my bet count by 1',
                 onPressed: () {
                   setState(() {
-                    myBet["count"] += 1;
+                    myBet["count"] = myBet["count"]! + 1;
                   });
                 },
               ),
@@ -69,7 +75,8 @@ class _MyTurnState extends State<MyTurn> {
                 tooltip: 'Decrease my bet value by 1',
                 onPressed: () {
                   setState(() {
-                    if (myBet["value"] > 1) myBet["value"] -= 1;
+                    if (myBet["value"]! > 1)
+                      myBet["value"] = myBet["value"]! - 1;
                   });
                 },
               ),
@@ -79,7 +86,8 @@ class _MyTurnState extends State<MyTurn> {
                 tooltip: 'Increase my bet value by 1',
                 onPressed: () {
                   setState(() {
-                    if (myBet["value"] < 6) myBet["value"] += 1;
+                    if (myBet["value"]! < 6)
+                      myBet["value"] = myBet["value"]! + 1;
                   });
                 },
               ),
@@ -91,19 +99,19 @@ class _MyTurnState extends State<MyTurn> {
   }
 
   _isBigger(Map<String, int> currentBet, Map<String, int> myBet) {
-    int currentBetValue;
-    int myBetValue;
+    int? currentBetValue;
+    int? myBetValue;
     if (currentBet["value"] != 1 && myBet["value"] != 1 ||
         currentBet["value"] == 1 && myBet["value"] == 1) {
-      currentBetValue = currentBet["count"] * 10 + currentBet["value"];
-      myBetValue = myBet["count"] * 10 + myBet["value"];
+      currentBetValue = currentBet["count"]! * 10 + currentBet["value"]!;
+      myBetValue = myBet["count"]! * 10 + myBet["value"]!;
     } else if (currentBet["value"] != 1) {
-      myBetValue = myBet["count"] * 10 + myBet["value"];
-      currentBetValue = currentBet["count"] * 20 + currentBet["value"];
+      myBetValue = myBet["count"]! * 10 + myBet["value"]!;
+      currentBetValue = currentBet["count"]! * 20 + currentBet["value"]!;
     } else if (myBet["value"] != 1) {
-      myBetValue = myBet["count"] * 20 + myBet["value"];
-      currentBetValue = currentBet["count"] * 10 + currentBet["value"];
+      myBetValue = myBet["count"]! * 20 + myBet["value"]!;
+      currentBetValue = currentBet["count"]! * 10 + currentBet["value"]!;
     }
-    return myBetValue > currentBetValue;
-  }
+    return myBetValue! > currentBetValue!;
+  } */
 }
