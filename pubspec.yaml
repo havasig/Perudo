@@ -43,6 +43,12 @@ dev_dependencies:
 flutter:
   assets:
     - assets/config/
+    - assets/images/dice1.png
+    - assets/images/dice2.png
+    - assets/images/dice3.png
+    - assets/images/dice4.png
+    - assets/images/dice5.png
+    - assets/images/dice6.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

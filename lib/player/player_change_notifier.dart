@@ -5,10 +5,6 @@ import 'player.dart';
 class PlayerChangeNotifier extends ChangeNotifier {
   late Player player;
 
-  PlayerChangeNotifier(Player player) {
-    this.player = player;
-  }
-
   void setName(String name) {
     player.name = name;
     notifyListeners();
@@ -17,5 +13,9 @@ class PlayerChangeNotifier extends ChangeNotifier {
   void setReady(bool ready) {
     player.ready = ready;
     notifyListeners();
+  }
+
+  void setPlayer(Player me) {
+    player = me;
   }
 }

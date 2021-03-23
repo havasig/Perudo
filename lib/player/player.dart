@@ -1,10 +1,9 @@
 class Player {
   static int nextId = 0;
   late int id;
-  int dice = 0;
   bool ready = false;
-  List<int>? diceValues = [];
-  String name = "";
+  List<int> diceValues = [];
+  String name = "asd";
   final bool isAdmin;
 
   static int getNewId() {

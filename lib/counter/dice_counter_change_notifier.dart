@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class Counter extends ChangeNotifier {
-  int count = 1;
+class DiceCounterChangeNotifier extends ChangeNotifier {
+  int count = 5;
 
   void incrementCounter() {
     count++;
@@ -11,6 +11,7 @@ class Counter extends ChangeNotifier {
   void decrementCounter() {
     if (count == 1) return;
     count--;
+    //Http post ?
     notifyListeners();
   }
 }

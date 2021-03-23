@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:perudo/game/begin_game.dart';
-import 'package:perudo/game/game.dart';
+import 'package:perudo/game/game_model.dart';
 import 'package:perudo/game/game_change_notifier.dart';
 import 'package:perudo/player/player_change_notifier.dart';
 import 'package:perudo/player/player_name_text.dart';
@@ -10,7 +10,6 @@ import 'package:perudo/player/player_ready.dart';
 import 'package:perudo/player/player_name_input.dart';
 import 'package:perudo/player/players_ready_list.dart';
 import 'package:provider/provider.dart';
-import 'counter/counter.dart';
 import 'counter/dice_counter.dart';
 
 import 'player/player.dart';
@@ -25,71 +24,74 @@ class WaitingRoom extends StatefulWidget {
 
 class _WaitingRoomState extends State<WaitingRoom> {
   @override
-  Widget build(BuildContext context) {
-    Player me = Player(widget.isAdmin);
+  void initState() {
+    super.initState();
+
+    var playerChangerNotifier = context.read<PlayerChangeNotifier>();
+    var me = Player(widget.isAdmin);
+    playerChangerNotifier.setPlayer(me);
+
+    var gameChangerNotifier = context.read<GameChangeNotifier>();
     var game = Game();
     game.addPlayer(me);
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<PlayerChangeNotifier>(
-            create: (_) => PlayerChangeNotifier(me)),
-        ChangeNotifierProvider<Counter>(create: (_) => Counter()),
-        ChangeNotifierProvider<GameChangeNotifier>(
-            create: (_) => GameChangeNotifier(game)),
-      ],
-      child: WillPopScope(
-        onWillPop: () async {
-          var result = await showDialog(
-              context: context,
-              builder: (contest) {
-                return areYouSure();
-              });
-          return result ?? false;
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            title: Text('Create Room'),
-          ),
-          body: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text('Create Room'),
-                PlayerNameInput(),
-                PlayerNameText(),
-                DiceCounter(),
-                PlayerReady(),
-                Consumer<PlayerChangeNotifier>(
-                  builder: (context, player, _) => Visibility(
-                    visible: player.player.isAdmin,
-                    child: BeginGame(),
-                  ),
+    _createFakeEnemy(game);
+    gameChangerNotifier.setGame(game);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        var result = await showDialog(
+            context: context,
+            builder: (contest) {
+              return areYouSure();
+            });
+        return result ?? false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('Create Room'),
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text('Create Room'),
+              PlayerNameInput(),
+              PlayerNameText(),
+              DiceCounter(),
+              PlayerReady(),
+              Consumer<PlayerChangeNotifier>(
+                builder: (context, player, _) => Visibility(
+                  visible: player.player.isAdmin,
+                  child: BeginGame(),
                 ),
-                Consumer<GameChangeNotifier>(
-                  builder: (context, game, _) => ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PlayersReadyList(game)));
-                    },
-                    child: const Text('Players'),
-                  ),
-                ),
-                ElevatedButton(
-                  child: const Text('Leave'),
-                  onPressed: () async {
-                    var handlePop = await Navigator.maybePop(context);
-                    if (!handlePop) {
-                      SystemNavigator.pop();
-                    }
+              ),
+              Consumer<GameChangeNotifier>(
+                builder: (context, game, _) => ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PlayersReadyList(game)));
                   },
+                  child: const Text('Players'),
                 ),
-              ],
-            ),
+              ),
+              ElevatedButton(
+                child: const Text('Leave'),
+                onPressed: () async {
+                  var handlePop = await Navigator.maybePop(context);
+                  if (!handlePop) {
+                    SystemNavigator.pop();
+                  }
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -112,5 +114,24 @@ class _WaitingRoomState extends State<WaitingRoom> {
         ),
       ],
     );
+  }
+
+  void _createFakeEnemy(Game game) {
+    Player tmp1 = Player(false);
+    Player tmp2 = Player(false);
+    Player tmp3 = Player(false);
+    Player tmp4 = Player(false);
+    tmp1.name = "Tmp1";
+    tmp2.name = "Tmp2";
+    tmp3.name = "Tmp3";
+    tmp4.name = "Tmp4";
+    tmp1.ready = true;
+    tmp2.ready = true;
+    tmp3.ready = true;
+    tmp4.ready = true;
+    game.addPlayer(tmp1);
+    game.addPlayer(tmp2);
+    game.addPlayer(tmp3);
+    game.addPlayer(tmp4);
   }
 }

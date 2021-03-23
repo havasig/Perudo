@@ -1,36 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:perudo/counter/bet_counter.dart';
+import 'package:perudo/counter/bet_create_change_notifier.dart';
+import 'package:perudo/counter/bet_widget.dart';
+import 'package:perudo/game/current_dice_count.dart';
+import 'package:perudo/game/game_change_notifier.dart';
+import 'package:perudo/player/player_change_notifier.dart';
+import 'package:provider/provider.dart';
 
-class MyTurn extends StatefulWidget {
+import 'current_bet.dart';
+import 'current_player.dart';
+import 'in_game_title.dart';
+import 'my_dice.dart';
+
+class InGame extends StatefulWidget {
   @override
-  _MyTurnState createState() => _MyTurnState();
+  _InGameState createState() => _InGameState();
 }
 
-class _MyTurnState extends State<MyTurn> {
+class _InGameState extends State<InGame> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-  /* 
-  Map<String, int> myBet = {
-    "count": globals.currentBet["count"]!,
-    "value": globals.currentBet["value"]!
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Your turn'),
+    var me = context.watch<PlayerChangeNotifier>().player;
+    return ChangeNotifierProvider(
+      create: (_) => BetCreateChangeNotifier(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: InGameTitle(),
+        ),
+        body: Column(children: <Widget>[
+          MyDice(),
+          CurrentDiceCount(),
+          CurrentBet(),
+          CurrentPlayer(),
+          Consumer<GameChangeNotifier>(
+              builder: (context, game, _) => game.game.currentPlayer.id == me.id
+                  ? BetWidget()
+                  : Container()),
+        ]),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(25.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(globals.myData!.username!),
+    );
+  }
+
+/*             Text(globals.myData!.username!),
             Text('Your dice: '),
             Expanded(
               child: ListView.builder(
@@ -91,12 +103,7 @@ class _MyTurnState extends State<MyTurn> {
                   });
                 },
               ),
-            ]),
-          ],
-        ),
-      ),
-    );
-  }
+            ]), */
 
   _isBigger(Map<String, int> currentBet, Map<String, int> myBet) {
     int? currentBetValue;
@@ -113,5 +120,5 @@ class _MyTurnState extends State<MyTurn> {
       currentBetValue = currentBet["count"]! * 10 + currentBet["value"]!;
     }
     return myBetValue! > currentBetValue!;
-  } */
+  }
 }

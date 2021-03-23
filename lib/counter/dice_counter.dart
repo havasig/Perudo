@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../app_config.dart';
 import '../player/player.dart';
-import 'counter.dart';
+import 'dice_counter_change_notifier.dart';
 
 class DiceCounter extends StatefulWidget {
   DiceCounter({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class DiceCounter extends StatefulWidget {
 }
 
 class _DiceCounterState extends State<DiceCounter> {
-  late Counter counter;
+  late DiceCounterChangeNotifier counter;
   late Player player;
   late AppConfig config;
   @override
@@ -25,7 +25,7 @@ class _DiceCounterState extends State<DiceCounter> {
 
   @override
   Widget build(BuildContext context) {
-    counter = context.watch<Counter>();
+    counter = context.watch<DiceCounterChangeNotifier>();
     player = context.watch<PlayerChangeNotifier>().player;
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       IconButton(
@@ -34,7 +34,7 @@ class _DiceCounterState extends State<DiceCounter> {
         onPressed: !player.ready & player.isAdmin
             ? () {
                 setState(() {
-                  if (counter.count > 1) counter.decrementCounter();
+                  counter.decrementCounter();
                 });
               }
             : null,
