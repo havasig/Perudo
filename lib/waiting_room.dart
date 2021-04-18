@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:perudo/game/begin_game.dart';
-import 'package:perudo/game/game_model.dart';
+import 'package:perudo/http/server_change_notifier.dart';
+import 'package:perudo/models/game.dart';
 import 'package:perudo/game/game_change_notifier.dart';
 import 'package:perudo/player/player_change_notifier.dart';
 import 'package:perudo/player/player_name_text.dart';
@@ -11,31 +12,47 @@ import 'package:perudo/player/player_name_input.dart';
 import 'package:perudo/player/players_ready_list.dart';
 import 'package:provider/provider.dart';
 import 'counter/dice_counter.dart';
+import 'dart:io';
 
-import 'player/player.dart';
+import 'models/player.dart';
 
 class WaitingRoom extends StatefulWidget {
   final bool isAdmin;
-  WaitingRoom(this.isAdmin, {Key? key}) : super(key: key);
+  WaitingRoom(this.isAdmin, InternetAddress? ip, {Key? key}) : super(key: key);
 
   @override
   _WaitingRoomState createState() => _WaitingRoomState();
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
+  ServerChangeNotifier? server;
   @override
   void initState() {
     super.initState();
 
-    var playerChangerNotifier = context.read<PlayerChangeNotifier>();
+    //create myself
+    var playerChangerNotifier = context.watch<PlayerChangeNotifier>();
     var me = Player(widget.isAdmin);
     playerChangerNotifier.setPlayer(me);
 
-    var gameChangerNotifier = context.read<GameChangeNotifier>();
-    var game = Game();
-    game.addPlayer(me);
-    _createFakeEnemy(game);
-    gameChangerNotifier.setGame(game);
+    //start server
+    if (widget.isAdmin) {
+      server = context.watch<ServerChangeNotifier>();
+      server!.startServer();
+
+      //create game object
+      var gameChangerNotifier = context.watch<GameChangeNotifier>();
+      var game = Game(me, []);
+      game.addPlayer(me);
+      _createFakeEnemy(game);
+      gameChangerNotifier.setGame(game);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    server?.closeServer();
   }
 
   @override
@@ -74,10 +91,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
               Consumer<GameChangeNotifier>(
                 builder: (context, game, _) => ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PlayersReadyList(game)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlayersReadyList(game)));
                   },
                   child: const Text('Players'),
                 ),
@@ -101,8 +115,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
   AlertDialog areYouSure() {
     return AlertDialog(
       title: Text("Are you sure?"),
-      content: Text(
-          "Do you really want to leave? The group will be deleted if you are the admin."),
+      content: Text("Do you really want to leave? The group will be deleted if you are the admin."),
       actions: [
         TextButton(
           child: Text("No"),

@@ -10,7 +10,7 @@ class CurrentDiceCount extends StatelessWidget {
     var gameChangeNotifier = context.watch<GameChangeNotifier>();
     int diceCount = 0;
     for (var player in gameChangeNotifier.game.players) {
-      diceCount += player.diceValues.length;
+      diceCount += player.diceValues!.length;
     }
     return Text("Currently $diceCount dice in game");
   }

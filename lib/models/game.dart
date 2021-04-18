@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:perudo/bet.dart';
-import 'package:perudo/player/player.dart';
+import 'package:perudo/models/bet.dart';
+import 'package:perudo/models/player.dart';
 
 class Game {
   int id = 0;
@@ -10,6 +10,15 @@ class Game {
   bool turn = false;
   Bet? currentBet;
   late Player currentPlayer;
+
+  Game(
+    this.currentPlayer,
+    this.players, [
+    this.id = 0,
+    this.startDiceNumber = 5,
+    this.turn = false,
+    this.currentBet,
+  ]);
 
   void addPlayer(Player player) {
     players.add(player);
@@ -26,7 +35,7 @@ class Game {
     var rnd = new Random();
     for (var player in players) {
       for (var i = 0; i < startDiceNumber; i++) {
-        player.diceValues.add(rnd.nextInt(6) + 1);
+        player.diceValues!.add(rnd.nextInt(6) + 1);
       }
     }
   }

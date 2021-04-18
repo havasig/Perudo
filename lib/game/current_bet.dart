@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:perudo/game/game_change_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../bet.dart';
+import '../models/bet.dart';
 
 class CurrentBet extends StatelessWidget {
   @override

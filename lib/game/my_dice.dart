@@ -11,11 +11,11 @@ class MyDice extends StatelessWidget {
     return GridView.count(
         crossAxisCount: 5,
       shrinkWrap: true,
-        children: List.generate(player.diceValues.length, (index) {
+        children: List.generate(player.diceValues!.length, (index) {
           return Center(
               child: Image(
                   image: AssetImage(
-                      'assets/images/dice${player.diceValues[index]}.png'),
+                      'assets/images/dice${player.diceValues![index]}.png'),
                   height: 50,
                   width: 50));
         }));

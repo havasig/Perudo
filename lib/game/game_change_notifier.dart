@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:perudo/game/game_model.dart';
-import 'package:perudo/player/player.dart';
+import 'package:perudo/models/game.dart';
+import 'package:perudo/models/player.dart';
 
 class GameChangeNotifier extends ChangeNotifier {
   late Game game;
@@ -16,7 +16,7 @@ class GameChangeNotifier extends ChangeNotifier {
 
   void start(int diceNumber) {
     game.startDiceNumber = diceNumber;
-    game.currentPlayer = game.players[1];
+    game.currentPlayer = game.players[0];
     game.rollDiceForEveryone();
     notifyListeners();
   }

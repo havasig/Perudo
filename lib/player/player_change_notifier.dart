@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'player.dart';
+import '../models/player.dart';
 
 class PlayerChangeNotifier extends ChangeNotifier {
   late Player player;

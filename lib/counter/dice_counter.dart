@@ -3,7 +3,7 @@ import 'package:perudo/player/player_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../app_config.dart';
-import '../player/player.dart';
+import '../models/player.dart';
 import 'dice_counter_change_notifier.dart';
 
 class DiceCounter extends StatefulWidget {

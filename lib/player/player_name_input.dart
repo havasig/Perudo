@@ -17,7 +17,7 @@ class PlayerNameInput extends StatelessWidget {
         if (newName != "") {
           player.setName(newName);
           _controller.clear();
-        } else {
+        } else if (player.player.name == "") {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Name cannot be empty!')));
         }

@@ -1,4 +1,4 @@
-import 'package:perudo/player/player.dart';
+import 'package:perudo/models/player.dart';
 
 class Bet {
   int value;
