@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:perudo/create_lobby.dart';
 import 'package:perudo/http/available_servers.dart';
 import 'package:perudo/player/player_change_notifier.dart';
-import 'package:perudo/waiting_room.dart';
 import 'package:provider/provider.dart';
 
 import 'counter/dice_counter_change_notifier.dart';
@@ -10,11 +10,9 @@ import 'http/server_change_notifier.dart';
 
 void main() {
   runApp(Menu());
-  //runApp(Server());
 }
 
 class Menu extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -52,13 +50,13 @@ class MainMenu extends StatelessWidget {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AvailableServers()));
               },
-              child: const Text('Join room'),
+              child: const Text('Join lobby'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => WaitingRoom(true, null)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLobby()));
               },
-              child: const Text('Create room'),
+              child: const Text('Create lobby'),
             ),
           ],
         ),

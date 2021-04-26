@@ -1,3 +1,4 @@
+import 'package:perudo/models/json_models.dart';
 import 'package:perudo/models/player.dart';
 
 class Bet {
@@ -6,4 +7,8 @@ class Bet {
   Player player;
 
   Bet(this.value, this.count, this.player);
+
+  BetDTO toDTO() {
+    return BetDTO(value, count, player.toDTO());
+  }
 }

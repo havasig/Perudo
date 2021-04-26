@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:perudo/player/player_change_notifier.dart';
+import 'package:perudo/ws/websocket_server.dart';
 import 'package:provider/provider.dart';
 
 import '../app_config.dart';
@@ -7,16 +8,16 @@ import '../models/player.dart';
 import 'dice_counter_change_notifier.dart';
 
 class DiceCounter extends StatefulWidget {
-  DiceCounter({Key? key}) : super(key: key);
+  final WebsocketServer? wsServer;
+  DiceCounter({Key? key, this.wsServer}) : super(key: key);
 
   @override
   _DiceCounterState createState() => _DiceCounterState();
 }
 
 class _DiceCounterState extends State<DiceCounter> {
-  late DiceCounterChangeNotifier counter;
-  late Player player;
   late AppConfig config;
+
   @override
   void initState() {
     super.initState();
@@ -25,8 +26,9 @@ class _DiceCounterState extends State<DiceCounter> {
 
   @override
   Widget build(BuildContext context) {
-    counter = context.watch<DiceCounterChangeNotifier>();
-    player = context.watch<PlayerChangeNotifier>().player;
+    DiceCounterChangeNotifier counter = context.watch<DiceCounterChangeNotifier>();
+    counter.setWebsocketServer(widget.wsServer);
+    Player player = context.watch<PlayerChangeNotifier>().player;
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       IconButton(
         icon: Icon(Icons.arrow_left),
@@ -46,8 +48,7 @@ class _DiceCounterState extends State<DiceCounter> {
         onPressed: !player.ready & player.isAdmin
             ? () {
                 setState(() {
-                  if (counter.count < config.maxDiceNumber)
-                    counter.incrementCounter();
+                  if (counter.count < config.maxDiceNumber) counter.incrementCounter();
                 });
               }
             : null,

@@ -14,6 +14,11 @@ class GameChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removePlayer(String playerId) {
+    game.removePlayer(playerId);
+    notifyListeners();
+  }
+
   void start(int diceNumber) {
     game.startDiceNumber = diceNumber;
     game.currentPlayer = game.players[0];
@@ -23,5 +28,15 @@ class GameChangeNotifier extends ChangeNotifier {
 
   void setGame(Game game) {
     this.game = game;
+  }
+
+  void setPlayerName(String userId, String name) {
+    game.players.where((player) => player.id == userId).first.name = name;
+    notifyListeners();
+  }
+
+  void setPlayerReady(String userId, bool ready) {
+    game.players.where((player) => player.id == userId).first.ready = ready;
+    notifyListeners();
   }
 }

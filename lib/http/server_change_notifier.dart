@@ -8,6 +8,11 @@ import '../pair.dart';
 class ServerChangeNotifier extends ChangeNotifier {
   RawDatagramSocket? datagramSocket;
   List<Pair> availableServers = [];
+  String name = "Unnamed";
+
+  void setName(String name) {
+    this.name = name;
+  }
 
   startServer() {
     RawDatagramSocket.bind(InternetAddress.anyIPv4, 4041).then((ds) {
@@ -16,9 +21,9 @@ class ServerChangeNotifier extends ChangeNotifier {
       datagramSocket?.joinMulticast(InternetAddress("224.0.0.1"));
       datagramSocket?.listen((RawSocketEvent event) {
         if (event == RawSocketEvent.read) {
-          Datagram? datagram = datagramSocket!.receive();
+          Datagram? datagram = datagramSocket?.receive();
           if (datagram != null) {
-            datagramSocket?.send("Joe".codeUnits, datagram.address, datagram.port);
+            datagramSocket?.send(name.codeUnits, datagram.address, datagram.port);
           }
         }
       });
@@ -26,6 +31,7 @@ class ServerChangeNotifier extends ChangeNotifier {
   }
 
   closeServer() {
+    datagramSocket?.close();
     datagramSocket = null;
   }
 

@@ -6,23 +6,22 @@ part of 'json_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GameResponse _$GameResponseFromJson(Map<String, dynamic> json) {
-  return GameResponse(
+GameDTO _$GameDTOFromJson(Map<String, dynamic> json) {
+  return GameDTO(
     json['id'] as int,
     json['startDiceNumber'] as int,
     (json['players'] as List<dynamic>)
-        .map((e) => PlayerResponse.fromJson(e as Map<String, dynamic>))
+        .map((e) => PlayerDTO.fromJson(e as Map<String, dynamic>))
         .toList(),
     json['turn'] as bool,
     json['currentBet'] == null
         ? null
-        : BetResponse.fromJson(json['currentBet'] as Map<String, dynamic>),
-    PlayerResponse.fromJson(json['currentPlayer'] as Map<String, dynamic>),
+        : BetDTO.fromJson(json['currentBet'] as Map<String, dynamic>),
+    PlayerDTO.fromJson(json['currentPlayer'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$GameResponseToJson(GameResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$GameDTOToJson(GameDTO instance) => <String, dynamic>{
       'id': instance.id,
       'startDiceNumber': instance.startDiceNumber,
       'players': instance.players,
@@ -31,9 +30,9 @@ Map<String, dynamic> _$GameResponseToJson(GameResponse instance) =>
       'currentPlayer': instance.currentPlayer,
     };
 
-PlayerResponse _$PlayerResponseFromJson(Map<String, dynamic> json) {
-  return PlayerResponse(
-    json['id'] as int,
+PlayerDTO _$PlayerDTOFromJson(Map<String, dynamic> json) {
+  return PlayerDTO(
+    json['id'] as String,
     json['ready'] as bool,
     (json['diceValues'] as List<dynamic>).map((e) => e as int).toList(),
     json['name'] as String,
@@ -41,8 +40,7 @@ PlayerResponse _$PlayerResponseFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PlayerResponseToJson(PlayerResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PlayerDTOToJson(PlayerDTO instance) => <String, dynamic>{
       'id': instance.id,
       'ready': instance.ready,
       'diceValues': instance.diceValues,
@@ -50,17 +48,31 @@ Map<String, dynamic> _$PlayerResponseToJson(PlayerResponse instance) =>
       'isAdmin': instance.isAdmin,
     };
 
-BetResponse _$BetResponseFromJson(Map<String, dynamic> json) {
-  return BetResponse(
+BetDTO _$BetDTOFromJson(Map<String, dynamic> json) {
+  return BetDTO(
     json['value'] as int,
     json['count'] as int,
-    PlayerResponse.fromJson(json['player'] as Map<String, dynamic>),
+    PlayerDTO.fromJson(json['player'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$BetResponseToJson(BetResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$BetDTOToJson(BetDTO instance) => <String, dynamic>{
       'value': instance.value,
       'count': instance.count,
       'player': instance.player,
+    };
+
+MessageDTO _$MessageDTOFromJson(Map<String, dynamic> json) {
+  return MessageDTO(
+    json['messageType'] as String,
+    json['userId'] as String?,
+    json['object'],
+  );
+}
+
+Map<String, dynamic> _$MessageDTOToJson(MessageDTO instance) =>
+    <String, dynamic>{
+      'messageType': instance.messageType,
+      'userId': instance.userId,
+      'object': instance.object,
     };

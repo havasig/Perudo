@@ -27,6 +27,7 @@ dependencies:
   json_annotation: ^4.0.0
   dio: ^4.0.0-prev2
   retrofit: 2.0.0-beta1
+  uuid: any
 
 
   # The following adds the Cupertino Icons font to your application.

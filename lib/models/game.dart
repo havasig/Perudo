@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:perudo/models/bet.dart';
+import 'package:perudo/models/json_models.dart';
 import 'package:perudo/models/player.dart';
 
 class Game {
@@ -24,6 +25,11 @@ class Game {
     players.add(player);
   }
 
+  void removePlayer(String playerId) {
+    Player leavingPlayer = players.where((player) => player.id == playerId).first;
+    players.remove(leavingPlayer);
+  }
+
   bool everyPlayerReady() {
     for (var player in players) {
       if (!player.ready) return false;
@@ -38,5 +44,10 @@ class Game {
         player.diceValues!.add(rnd.nextInt(6) + 1);
       }
     }
+  }
+
+  GameDTO toDTO() {
+    List<PlayerDTO> players = this.players.map((player) => player.toDTO()).toList();
+    return GameDTO(id, startDiceNumber, players, turn, currentBet?.toDTO(), currentPlayer.toDTO());
   }
 }

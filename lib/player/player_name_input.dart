@@ -3,7 +3,10 @@ import 'package:perudo/player/player_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 class PlayerNameInput extends StatelessWidget {
+  PlayerNameInput({Key? key}) : super(key: key);
+
   final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var player = context.watch<PlayerChangeNotifier>();
@@ -18,8 +21,7 @@ class PlayerNameInput extends StatelessWidget {
           player.setName(newName);
           _controller.clear();
         } else if (player.player.name == "") {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Name cannot be empty!')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name cannot be empty!')));
         }
       },
     );

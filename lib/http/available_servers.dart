@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:perudo/join_lobby.dart';
 import 'package:provider/provider.dart';
 
-import '../waiting_room.dart';
 import 'server_change_notifier.dart';
 
 class AvailableServers extends StatefulWidget {
@@ -13,16 +13,9 @@ class AvailableServers extends StatefulWidget {
 }
 
 class _AvailableServersState extends State<AvailableServers> {
-  late ServerChangeNotifier server;
-  @override
-  void initState() {
-    super.initState();
-    //ITT MIÉRT NEM JÓ? server = context.watch<ServerChangeNotifier>();
-  }
-
   @override
   Widget build(BuildContext context) {
-    server = context.watch<ServerChangeNotifier>();
+    var server = context.watch<ServerChangeNotifier>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -32,7 +25,7 @@ class _AvailableServersState extends State<AvailableServers> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           ElevatedButton(
             onPressed: () {
-              server.refreshServers();
+              context.read<ServerChangeNotifier>().refreshServers();
             },
             child: const Text('Refresh servers'),
           ),
@@ -48,7 +41,10 @@ class _AvailableServersState extends State<AvailableServers> {
                         children: <Widget>[
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => WaitingRoom(false, server.availableServers[index].first)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => JoinLobby(server.availableServers[index].first)));
                             },
                             child: Text('Join to: ${server.availableServers[index].second}'),
                           ),
@@ -62,22 +58,3 @@ class _AvailableServersState extends State<AvailableServers> {
     );
   }
 }
-
-
-/*
-
-ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          return Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('${globals.myData!.diceValues![index]} '),
-                        ],
-                      ),
-                    );
-        },
-      );
-
-      */
