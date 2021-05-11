@@ -10,10 +10,9 @@ class CurrentBet extends StatelessWidget {
     var game = context.watch<GameChangeNotifier>();
     Bet? currentBet = game.game.currentBet;
     if (currentBet == null)
-      return Text("There is no bet, You start the game");
+      return Text("There is no bet");
     else {
-      return Text(
-          "The current bet is ${currentBet.value}pcs ${currentBet.count} from ${currentBet.player.name}");
+      return Text("The current bet is ${currentBet.count}pcs ${currentBet.value} from ${currentBet.player.name}");
     }
   }
 }

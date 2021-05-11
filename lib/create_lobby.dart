@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:perudo/counter/dice_counter_change_notifier.dart';
 import 'package:perudo/game/begin_game.dart';
 import 'package:perudo/http/server_change_notifier.dart';
+import 'package:perudo/models/bet.dart';
 import 'package:perudo/models/game.dart';
 import 'package:perudo/game/game_change_notifier.dart';
 import 'package:perudo/models/json_models.dart';
@@ -20,6 +22,7 @@ import 'alert_dialogs.dart';
 import 'counter/dice_counter.dart';
 import 'dart:convert';
 
+import 'main.dart';
 import 'models/player.dart';
 
 class CreateLobby extends StatefulWidget {
@@ -43,17 +46,25 @@ class _CreateLobbyState extends State<CreateLobby> {
       case "join":
         {
           var gameChangeNotifier = context.read<GameChangeNotifier>();
-          PlayerDTO newPlayerDTO = PlayerDTO(message["object"]["id"], message["object"]["ready"],
-              message["object"]["diceValues"].cast<int>(), message["object"]["name"], message["object"]["isAdmin"]);
+          PlayerDTO newPlayerDTO = PlayerDTO(
+              message["object"]["id"],
+              message["object"]["ready"],
+              message["object"]["diceValues"].cast<int>(),
+              message["object"]["name"],
+              message["object"]["diceCount"],
+              message["object"]["isAdmin"]);
           gameChangeNotifier.addPlayer(newPlayerDTO.toPlayer());
           MessageDTO messageDto = MessageDTO("game", null, gameChangeNotifier.game.toDTO());
           serverWebsocket.send(messageDto);
+          sleep(const Duration(seconds: 1));
+          serverWebsocket.send(MessageDTO("dice-count", null, context.read<DiceCounterChangeNotifier>().count));
         }
         break;
 
       case "leave":
         {
-          context.read<GameChangeNotifier>().removePlayer(message["object"]);
+          var gameChangeNotifier = context.read<GameChangeNotifier>();
+          gameChangeNotifier.removePlayer(message["object"]);
         }
         break;
 
@@ -66,13 +77,61 @@ class _CreateLobbyState extends State<CreateLobby> {
         }
         break;
 
-
       case "set-ready":
         {
           var gameChangeNotifier = context.read<GameChangeNotifier>();
           gameChangeNotifier.setPlayerReady(message["userId"], message["object"]);
           MessageDTO messageDto = MessageDTO("set-ready", message["userId"], message["object"]);
           serverWebsocket.send(messageDto);
+        }
+        break;
+
+      case "make-bet":
+        {
+          var gameChangeNotifier = context.read<GameChangeNotifier>();
+          var player = gameChangeNotifier.getPlayer(message["userId"]);
+          var betCreate = BetDTO(message["object"]["value"], message["object"]["count"], player.toDTO());
+          Bet newBet = betCreate.toBet();
+          gameChangeNotifier.makeBet(newBet);
+          MessageDTO betDto = MessageDTO("make-bet", player.id, newBet.toDTO());
+          serverWebsocket.send(betDto);
+          gameChangeNotifier.nextPlayer();
+        }
+        break;
+
+      case "lie":
+        {
+          var game = context.read<GameChangeNotifier>();
+          var player = game.getPlayer(message["userId"]);
+          var looser = game.lie(player);
+          var looserId = looser.id;
+          var me = context.read<PlayerChangeNotifier>().player;
+          game.game.startNewGame = true;
+          MessageDTO lieMessage = MessageDTO("lie", message["userId"], looserId);
+          serverWebsocket.send(lieMessage);
+          if (looserId == me.id) {
+            context.read<PlayerChangeNotifier>().removeDice();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('You lost a dice')));
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Player ' + looser.name + ' lost a dice')));
+          }
+          if (game.game.players.length == 1) {
+            if (game.game.players[0].id == player.id) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('You won the game! Well done!')));
+            } else {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(game.game.players[0].name + ' won the game!')));
+            }
+            serverWebsocket.stop();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => MainMenu(),
+              ),
+              (route) => false,
+            );
+          }
         }
         break;
 
@@ -98,7 +157,7 @@ class _CreateLobbyState extends State<CreateLobby> {
 
     Game game = Game(me, []);
     game.addPlayer(me);
-    _createFakeEnemy(game);
+    //_createFakeEnemy(game);
 
     context.read<GameChangeNotifier>().setGame(game);
 
@@ -118,7 +177,6 @@ class _CreateLobbyState extends State<CreateLobby> {
   @override
   void dispose() {
     serverChangeNotifier.closeServer();
-    serverWebsocket.stop();
     super.dispose();
   }
 
@@ -131,6 +189,9 @@ class _CreateLobbyState extends State<CreateLobby> {
             builder: (contest) {
               return AlertDialogs.areYouSure(context);
             });
+        if (result) {
+          serverWebsocket.stop();
+        }
         return result ?? false;
       },
       child: Scaffold(
@@ -149,11 +210,9 @@ class _CreateLobbyState extends State<CreateLobby> {
               PlayerNameText(),
               DiceCounter(wsServer: serverWebsocket),
               PlayerReady(),
-              Consumer<PlayerChangeNotifier>(
-                builder: (context, player, _) => Visibility(
-                  visible: player.player.isAdmin,
-                  child: BeginGame(),
-                ),
+              InheritedWsServerProvider(
+                child: BeginGame(),
+                websocketServer: serverWebsocket,
               ),
               Consumer<GameChangeNotifier>(
                 builder: (context, game, _) => ElevatedButton(

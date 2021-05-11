@@ -36,6 +36,7 @@ PlayerDTO _$PlayerDTOFromJson(Map<String, dynamic> json) {
     json['ready'] as bool,
     (json['diceValues'] as List<dynamic>).map((e) => e as int).toList(),
     json['name'] as String,
+    json['diceCount'] as int,
     json['isAdmin'] as bool,
   );
 }
@@ -45,6 +46,7 @@ Map<String, dynamic> _$PlayerDTOToJson(PlayerDTO instance) => <String, dynamic>{
       'ready': instance.ready,
       'diceValues': instance.diceValues,
       'name': instance.name,
+      'diceCount': instance.diceCount,
       'isAdmin': instance.isAdmin,
     };
 

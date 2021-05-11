@@ -16,6 +16,7 @@ class _BetCounterState extends State<BetCounter> {
     var betCreate = context.watch<BetCreateChangeNotifier>();
     return Column(
       children: <Widget>[
+        Text('Quantity'),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           IconButton(
             icon: Icon(Icons.arrow_left),
@@ -37,6 +38,7 @@ class _BetCounterState extends State<BetCounter> {
             },
           ),
         ]),
+        Text('Value'),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           IconButton(
             icon: Icon(Icons.arrow_left),

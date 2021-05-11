@@ -6,12 +6,7 @@ import 'models.dart';
 import 'dart:convert';
 
 class WebsocketClientChangeNotifier extends ChangeNotifier {
-  WebsocketClientChangeNotifier({
-    this.onError,
-    this.onData,
-    this.hostname,
-    this.port,
-  });
+  WebsocketClientChangeNotifier();
 
   String? playerId;
   bool connected = false;
@@ -20,6 +15,18 @@ class WebsocketClientChangeNotifier extends ChangeNotifier {
   Uint8ListCallback? onData;
   DynamicCallback? onError;
   Socket? socket;
+
+  init(
+    onError,
+    onData,
+    hostname,
+    port,
+  ) {
+    this.onError = onError;
+    this.onData = onData;
+    this.hostname = hostname;
+    this.port = port;
+  }
 
   connect() async {
     try {

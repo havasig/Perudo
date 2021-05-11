@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:perudo/ws/models.dart';
 
 class WebsocketServer {
@@ -58,4 +59,16 @@ class WebsocketServer {
       },
     );
   }
+}
+
+class InheritedWsServerProvider extends InheritedWidget {
+  final WebsocketServer websocketServer;
+  InheritedWsServerProvider({
+    required Widget child,
+    required this.websocketServer,
+  }) : super(child: child);
+  @override
+  bool updateShouldNotify(InheritedWsServerProvider oldWidget) => websocketServer != oldWidget.websocketServer;
+  static InheritedWsServerProvider? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<InheritedWsServerProvider>();
 }

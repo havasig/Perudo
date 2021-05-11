@@ -12,13 +12,12 @@ class _BetWidgetState extends State<BetWidget> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       BetCounter(),
-      /* ElevatedButton(
+      ElevatedButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => WaitingRoom(false)));
+          print("make bet");
         },
-        child: const Text('Join room'),
-      ), */
+        child: const Text('Make bet'),
+      ),
     ]);
   }
 }

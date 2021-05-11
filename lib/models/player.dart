@@ -6,9 +6,10 @@ class Player {
   bool ready;
   List<int>? diceValues = [];
   String name;
+  int? diceCount;
   final bool isAdmin;
 
-  Player(this.isAdmin, [this.id, this.diceValues, this.ready = false, this.name = ""]) {
+  Player(this.isAdmin, [this.id, this.diceValues, this.ready = false, this.diceCount = 0, this.name = ""]) {
     if (this.id == null) this.id = getNewId();
 
     if (this.diceValues == null) {
@@ -17,11 +18,15 @@ class Player {
   }
 
   PlayerDTO toDTO() {
-    return PlayerDTO(id!, ready, diceValues!, name, isAdmin);
+    return PlayerDTO(id!, ready, diceValues!, name, diceCount!, isAdmin);
   }
 
   static String getNewId() {
     var uuid = Uuid();
     return uuid.v4();
+  }
+
+  void looseDice() {
+    this.diceCount = diceCount != null ? diceCount! - 1 : null;
   }
 }

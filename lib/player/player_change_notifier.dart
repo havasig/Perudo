@@ -53,4 +53,16 @@ class PlayerChangeNotifier extends ChangeNotifier {
   void setServerChangeNotifier(ServerChangeNotifier serverChangeNotifier) {
     this.serverChangeNotifier = serverChangeNotifier;
   }
+
+  void setDiece(List<int> diceValues) {
+    player.diceValues = diceValues;
+    notifyListeners();
+  }
+
+  void removeDice() {
+    if (player.diceCount! > 0) {
+      player.diceValues!.removeLast();
+      notifyListeners();
+    }
+  }
 }

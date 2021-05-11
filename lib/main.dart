@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:perudo/create_lobby.dart';
 import 'package:perudo/http/available_servers.dart';
 import 'package:perudo/player/player_change_notifier.dart';
+import 'package:perudo/ws/ws_client_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'counter/dice_counter_change_notifier.dart';
@@ -21,6 +22,7 @@ class Menu extends StatelessWidget {
         ChangeNotifierProvider<DiceCounterChangeNotifier>(create: (_) => DiceCounterChangeNotifier()),
         ChangeNotifierProvider<GameChangeNotifier>(create: (_) => GameChangeNotifier()),
         ChangeNotifierProvider<ServerChangeNotifier>(create: (_) => ServerChangeNotifier()),
+        ChangeNotifierProvider<WebsocketClientChangeNotifier>(create: (_) => WebsocketClientChangeNotifier()),
       ],
       child: MaterialApp(
         title: 'Main Menu',

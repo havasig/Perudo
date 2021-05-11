@@ -10,29 +10,11 @@ class MyDice extends StatelessWidget {
     var player = context.watch<PlayerChangeNotifier>().player;
     return GridView.count(
         crossAxisCount: 5,
-      shrinkWrap: true,
+        shrinkWrap: true,
         children: List.generate(player.diceValues!.length, (index) {
           return Center(
               child: Image(
-                  image: AssetImage(
-                      'assets/images/dice${player.diceValues![index]}.png'),
-                  height: 50,
-                  width: 50));
+                  image: AssetImage('assets/images/dice${player.diceValues![index]}.png'), height: 50, width: 50));
         }));
-/*         ListView.builder(
-          padding: const EdgeInsets.all(10),
-          itemCount: player.diceValues.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (BuildContext context, int index) => Padding(
-            padding: EdgeInsets.all(10),
-            child: Image(
-                image: AssetImage(
-                    'assets/images/dice${player.diceValues[index]}.png'),
-                height: 50,
-                width: 50),
-          ),
-        ),
-      ],
-    ); */
   }
 }

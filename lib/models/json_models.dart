@@ -37,9 +37,10 @@ class PlayerDTO {
   bool ready;
   List<int> diceValues;
   String name;
+  int diceCount;
   bool isAdmin;
 
-  PlayerDTO(this.id, this.ready, this.diceValues, this.name, this.isAdmin);
+  PlayerDTO(this.id, this.ready, this.diceValues, this.name, this.diceCount, this.isAdmin);
 
   factory PlayerDTO.fromJson(Map<String, dynamic> json) => _$PlayerDTOFromJson(json);
   Map<String, dynamic> toJson() => _$PlayerDTOToJson(this);

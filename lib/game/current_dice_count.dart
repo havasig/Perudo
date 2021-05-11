@@ -8,10 +8,7 @@ class CurrentDiceCount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var gameChangeNotifier = context.watch<GameChangeNotifier>();
-    int diceCount = 0;
-    for (var player in gameChangeNotifier.game.players) {
-      diceCount += player.diceValues!.length;
-    }
+    int diceCount = gameChangeNotifier.getDiceCount();
     return Text("Currently $diceCount dice in game");
   }
 }
